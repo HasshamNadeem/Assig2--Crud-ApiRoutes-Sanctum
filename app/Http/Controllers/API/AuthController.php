@@ -32,6 +32,7 @@ class AuthController extends Controller
        $response=[
         'user'=>$user,
         'token'=>$token,
+        'satus'=>'successful'
        ];
 
        return response($response,201);
