@@ -29,6 +29,12 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    // Eloquent model realtionship is as below:
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

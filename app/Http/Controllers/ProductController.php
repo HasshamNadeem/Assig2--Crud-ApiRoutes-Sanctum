@@ -3,89 +3,99 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function store (Request $request)
+
+    public function store(Request $request, Product $product)
     {
+
         $request->validate([
-            'name'=>['required', 'max: 200'],
+             'name'=>['required', 'max: 200'],
              'description'=>['required', 'max: 200'],
-            'price'=>['required', 'max: 200'],
-             'qty'=>['required', 'max: 200'],
+             'price'=>['required', 'max: 200'],
         ]);
 
-        Product::create($request->all());
+
+        $product->user_id=auth()->user()->id;
+        $product->name=$request->input('name');
+        $product->description=$request->input('description');
+        $product->price=$request->input('price');
+        $product->save();
 
         return response()->json(['message'=>'Product Added Successfully!'],200);
 
     }
 
-    public function index ()
+
+
+ public function index(Product $product)
+ {
+    $user = User::find(auth()->user()->id);
+    $products = $user->products;
+    return response()->json(['products'=> $products]);
+ }
+
+    public function show (Product $id)
     {
-        $products=Product::all();
-        return response()->json(['products'=> $products]);
+        if ($id->user_id==auth()->user()->id)
+        {
+             return $id;
+        }
+        else
+        {
+            return response()->json(['message'=>'You have no product with this ID.'],404);
+        }
     }
 
-    public function show($id)
-    {
-          $product=Product::find($id);
-          if ($product)
-          {
-          return response()->json(['product'=>$product]);
-          }
-          else
-          {
-            return response()->json(['message'=>'Product Not Found'],404);
-          }
-    }
 
-
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $id)
     {
+
+        if ($id->user_id==auth()->user()->id)
+        {
         request()->validate([
             'name'=>['required', 'max: 200'],
             'description'=>['required', 'max: 200'],
             'price'=>['required', 'max: 200'],
-            'qty'=>['required', 'max: 200'],
         ]);
 
-        $product=Product::find($id);
 
-        if($product)
-        {
-             $product->update($request->all());
 
-            // $product->name=$request->name;
-            // $product->description=$request->description;
-            // $product->price=$request->price;
-            // $product->qty=$request->qty;
-            // $product->update();
+        $id->user_id=auth()->user()->id;
+        $id->name=$request->input('name');
+        $id->description=$request->input('description');
+        $id->price=$request->input('price');
+        $id->save();
 
-            return response()->json(['message'=>'Product Update Successfuly'],200);
 
-        }
+        return response()->json(['message'=>'Product Update Successfuly'],200);
+      }
+      else
+      {
+          return response()->json(['message'=>'You have no product with this ID.'],404);
+      }
 
-        else
-        {
-            return response()->json(['message'=>'Product Not Found'],404);
-        }
+
+
     }
 
-    public function destroy($id)
+
+
+    public function destroy(Product $id)
     {
-        $product=Product::find($id);
-
-        if ($product)
+        if ($id->user_id==auth()->user()->id)
         {
-            $product->delete();
-            return response()->json(['message'=>'Product deleted successfully'],200);
-
+        $id->delete();
+        return response()->json(['message'=>'Product deleted successfully'],200);
         }
         else
         {
-            return response()->json(['message'=>'Product not found '],404);
+            return response()->json(['message'=>'You have no product with this ID.'],404);
         }
     }
+
 }
+    

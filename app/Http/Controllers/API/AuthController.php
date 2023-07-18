@@ -32,7 +32,6 @@ class AuthController extends Controller
        $response=[
         'user'=>$user,
         'token'=>$token,
-        'satus'=>'successful'
        ];
 
        return response($response,201);
@@ -46,9 +45,9 @@ class AuthController extends Controller
 
         auth()->user()->tokens()->delete();
         return response()->json(['message'=>'User Logged Out Successfuly']);
-
-
     }
+
+
 
     public function login (Request $request)
     {
@@ -67,6 +66,7 @@ class AuthController extends Controller
 
           else
           {
+
             $token=$user->createToken('fundaProjectTokenLogin')->plainTextToken;
 
        $response=[

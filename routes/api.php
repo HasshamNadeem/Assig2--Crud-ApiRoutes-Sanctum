@@ -17,25 +17,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::Post('register',[ AuthController::class,'register']);
-Route::Post('login',[ AuthController::class,'login']);
+Route::post('register',[ AuthController::class,'register']);
+Route::post('login',[ AuthController::class,'login']);
 
 Route::middleware(['auth:sanctum'])->group(function(){
 
-    Route::Post('logout',[AuthController::class,'logout']);
+    Route::post('logout',[AuthController::class,'logout']);
 
-    Route::Post('product/add',[ProductController::class,'store']);
+    //Below routes now use route model binding
 
-    Route::Get('products',[ProductController::class,'index']);
+    Route::post('product',[ProductController::class,'store']);
 
-    Route::Put('product/{id}/update',[ProductController::class,'update']);
+    Route::get('products',[ProductController::class,'index']);
 
-    Route::Get('product/{id}/show',[ProductController::class,'show']);
+    Route::put('product/{id}',[ProductController::class,'update']);
 
-    Route::Delete('product/{id}/delete',[ProductController::class,'destroy']);
+    Route::get('product/{id}',[ProductController::class,'show']);
+
+    Route::delete('product/{id}',[ProductController::class,'destroy']);
 
 });
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+
+
