@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,27 +15,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
 
-Route::post('register',[ AuthController::class,'register']);
-Route::post('login',[ AuthController::class,'login']);
-
-Route::middleware(['auth:sanctum'])->group(function(){
-
-    Route::post('logout',[AuthController::class,'logout']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
 
     //Below routes now use route model binding
 
-    Route::post('product',[ProductController::class,'store']);
+    Route::post('product', [ProductController::class, 'store']);
 
-    Route::get('products',[ProductController::class,'index']);
+    Route::get('products', [ProductController::class, 'index']);
 
-    Route::put('product/{id}',[ProductController::class,'update']);
+    Route::put('product/{id}', [ProductController::class, 'update']);
 
-    Route::get('product/{id}',[ProductController::class,'show']);
+    // Showing products by name, assuming they have unique names (just to test explicit route model binding)
 
-    Route::delete('product/{id}',[ProductController::class,'destroy']);
+    Route::get('product/{key:name}', [ProductController::class, 'show']);
 
+    Route::delete('product/{id}', [ProductController::class, 'destroy']);
 });
-
-
-

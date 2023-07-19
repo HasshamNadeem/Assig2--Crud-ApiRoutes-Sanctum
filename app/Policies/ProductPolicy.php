@@ -10,18 +10,15 @@ class ProductPolicy
 {
     use HandlesAuthorization;
 
-     /**
+    /**
      * Determine whether the user can update the model.
      *
-     * @param  \App\Models\User  $user
-     * @param  \App\Models\Product  $product
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, Product $product)
     {
-        return $user->id==$product->user_id;
+        return $user->id == $product->user_id;
     }
-
 
     // /**
     //  * Determine whether the user can view any models.
@@ -56,7 +53,6 @@ class ProductPolicy
     // {
     //     //
     // }
-
 
     // /**
     //  * Determine whether the user can delete the model.
