@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use App\Policies\ProductPolicy;
+
 
 class ProductController extends Controller
 {
@@ -25,36 +28,38 @@ class ProductController extends Controller
         $product->price=$request->input('price');
         $product->save();
 
-        return response()->json(['message'=>'Product Added Successfully!'],200);
+        return response()->json(['message'=>'Product Added Successfully!'],201);
 
     }
 
 
 
- public function index(Product $product)
+ public function index()
  {
     $user = User::find(auth()->user()->id);
     $products = $user->products;
     return response()->json(['products'=> $products]);
  }
 
+
     public function show (Product $id)
     {
-        if ($id->user_id==auth()->user()->id)
+        //authorizing using gate , returning boolean
+        if (Gate::allows('is-owner',$id))
         {
              return $id;
         }
         else
         {
-            return response()->json(['message'=>'You have no product with this ID.'],404);
+            return response()->json(['message'=>'You do not own this product.'],403);
         }
     }
 
 
     public function update(Request $request, Product $id)
     {
-
-        if ($id->user_id==auth()->user()->id)
+             //authorizing using policy, returning 403 for not owned products
+        if ($this->authorize('update',$id))
         {
         request()->validate([
             'name'=>['required', 'max: 200'],
@@ -73,29 +78,19 @@ class ProductController extends Controller
 
         return response()->json(['message'=>'Product Update Successfuly'],200);
       }
-      else
-      {
-          return response()->json(['message'=>'You have no product with this ID.'],404);
-      }
-
-
-
     }
 
 
 
     public function destroy(Product $id)
     {
-        if ($id->user_id==auth()->user()->id)
+                     //authorizing using policy, returning 403 for not owned products
+
+        if ($this->authorize('is-owner',$id))
         {
         $id->delete();
         return response()->json(['message'=>'Product deleted successfully'],200);
         }
-        else
-        {
-            return response()->json(['message'=>'You have no product with this ID.'],404);
-        }
     }
 
 }
-    
