@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -13,7 +12,6 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     use HasApiTokens;
-
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
@@ -29,6 +27,12 @@ class User extends Authenticatable
         'email',
         'password',
     ];
+    // Eloquent model realtionship is as below:
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 
     /**
      * The attributes that should be hidden for serialization.

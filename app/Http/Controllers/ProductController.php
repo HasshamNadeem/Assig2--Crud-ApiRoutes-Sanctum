@@ -4,88 +4,71 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
-    public function store (Request $request)
+    public function store(Request $request)
     {
         $request->validate([
-            'name'=>['required', 'max: 200'],
-             'description'=>['required', 'max: 200'],
-            'price'=>['required', 'max: 200'],
-             'qty'=>['required', 'max: 200'],
+            'name' => ['required', 'max: 200'],
+            'description' => ['required', 'max: 200'],
+            'price' => ['required', 'max: 200'],
         ]);
 
-        Product::create($request->all());
+        $product = new Product;
+        $product->user_id = auth()->user()->id;
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->price = $request->input('price');
+        $product->save();
 
-        return response()->json(['message'=>'Product Added Successfully!'],200);
-
+        return response()->json(['message' => 'Product Added Successfully!'], 201);
     }
 
-    public function index ()
+    public function index()
     {
-        $products=Product::all();
-        return response()->json(['products'=> $products]);
+     return response()->json(['products' => auth()->user()->products]);
     }
 
-    public function show($id)
+    public function show(Product $key)
     {
-          $product=Product::find($id);
-          if ($product)
-          {
-          return response()->json(['product'=>$product]);
-          }
-          else
-          {
-            return response()->json(['message'=>'Product Not Found'],404);
-          }
-    }
-
-
-    public function update(Request $request, $id)
-    {
-        request()->validate([
-            'name'=>['required', 'max: 200'],
-            'description'=>['required', 'max: 200'],
-            'price'=>['required', 'max: 200'],
-            'qty'=>['required', 'max: 200'],
-        ]);
-
-        $product=Product::find($id);
-
-        if($product)
-        {
-             $product->update($request->all());
-
-            // $product->name=$request->name;
-            // $product->description=$request->description;
-            // $product->price=$request->price;
-            // $product->qty=$request->qty;
-            // $product->update();
-
-            return response()->json(['message'=>'Product Update Successfuly'],200);
-
-        }
-
-        else
-        {
-            return response()->json(['message'=>'Product Not Found'],404);
+        //authorizing using gate , returning 403 for not owned products
+        if ($this->authorize('is-owner', $key)) {
+            return $key;
         }
     }
 
-    public function destroy($id)
+    public function update(Request $request, Product $id)
     {
-        $product=Product::find($id);
+        //authorizing using policy, returning 403 for not owned products
+        if ($this->authorize('update', $id)) {
+            request()->validate([
+                'name' => ['required', 'max: 200'],
+                'description' => ['required', 'max: 200'],
+                'price' => ['required', 'max: 200'],
+            ]);
 
-        if ($product)
-        {
-            $product->delete();
-            return response()->json(['message'=>'Product deleted successfully'],200);
+            //If I change this variable to name to product, the binding fails
 
+            $id->user_id = auth()->user()->id;
+            $id->name = $request->input('name');
+            $id->description = $request->input('description');
+            $id->price = $request->input('price');
+            $id->save();
+
+            return response()->json(['message' => 'Product Update Successfuly'], 200);
         }
-        else
-        {
-            return response()->json(['message'=>'Product not found '],404);
+    }
+
+    public function destroy(Product $id)
+    {
+        //authorizing using policy, returning 403 for not owned products
+
+        if ($this->authorize('is-owner', $id)) {
+            $id->delete();
+
+            return response()->json(['message' => 'Product deleted successfully'], 200);
         }
     }
 }
