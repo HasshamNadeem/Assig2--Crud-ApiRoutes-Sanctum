@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,10 +26,9 @@ class ProductFactory extends Factory
         ];
 
         return [
-            'name' => $this->faker->RandomElement($applianceList),
+            'name' => $this->faker->unique()->RandomElement($applianceList),
             'description' => $this->faker->sentence(),
             'price' => $this->faker->numberBetween(10000, 500000),
-            'user_id' => User::inRandomOrder()->first()->id,
 
         ];
     }

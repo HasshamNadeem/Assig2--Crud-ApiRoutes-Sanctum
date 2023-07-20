@@ -37,8 +37,8 @@ class Product extends Model
     }
 
     // Eloquent model realtionship is as below:
-    public function user()
+    public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'product_user');
     }
 }
