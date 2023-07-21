@@ -23,15 +23,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Below routes now use route model binding
 
-    Route::post('product', [ProductController::class, 'store']);
+    Route::post('user/product', [ProductController::class, 'store']);
 
-    Route::get('products', [ProductController::class, 'index']);
+    Route::get('user/products', [ProductController::class, 'index']);
 
-    Route::put('product/{id}', [ProductController::class, 'update']);
+    Route::put('user/product/{product}', [ProductController::class, 'update']);
 
     // Showing products by name, assuming they have unique names (just to test explicit route model binding)
 
-    Route::get('product/{key:name}', [ProductController::class, 'show']);
+    Route::get('user/product/{product:name}', [ProductController::class, 'show']);
 
-    Route::delete('product/{id}', [ProductController::class, 'destroy']);
+    Route::delete('user/product/{product}', [ProductController::class, 'destroy']);
 });
