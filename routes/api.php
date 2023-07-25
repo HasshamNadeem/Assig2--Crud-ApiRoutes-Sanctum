@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,15 +23,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     //Below routes now use route model binding
 
-    Route::post('user/product', [ProductController::class, 'store']);
+    Route::post('users/{user}/product', [ProductUserController::class, 'store']);
 
-    Route::get('user/products', [ProductController::class, 'index']);
+    Route::get('users/{user}/products', [ProductUserController::class, 'index']);
 
-    Route::put('user/product/{product}', [ProductController::class, 'update']);
+    Route::put('users/{user}/products/{product}', [ProductUserController::class, 'update']);
 
     // Showing products by name, assuming they have unique names (just to test explicit route model binding)
 
-    Route::get('user/product/{product:name}', [ProductController::class, 'show']);
+    Route::get('users/{user}/products/{product:name}', [ProductUserController::class, 'show']);
 
-    Route::delete('user/product/{product}', [ProductController::class, 'destroy']);
+    Route::delete('users/{user}/products/{product}', [ProductUserController::class, 'destroy']);
 });
