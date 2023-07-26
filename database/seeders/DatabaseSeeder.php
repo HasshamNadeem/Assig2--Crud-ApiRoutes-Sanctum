@@ -21,10 +21,7 @@ class DatabaseSeeder extends Seeder
 
         foreach (Product::all() as $product) {
             $users = User::inRandomOrder()->take(rand(1, 3))->pluck('id');
-            $product->users()->attach($users, [
-                'created_at' => now(),  // Update created_at timestamp
-                'updated_at' => now(),  // Update updated_at timestamp
-            ]);
+            $product->users()->attach($users);
         }
     }
 }
