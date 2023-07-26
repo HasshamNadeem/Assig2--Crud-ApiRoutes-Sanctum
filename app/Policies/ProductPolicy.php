@@ -37,7 +37,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        return $user->products->contains($product->id);
+        return true;
     }
 
     /**

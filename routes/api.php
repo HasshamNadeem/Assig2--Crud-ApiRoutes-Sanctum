@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\ProductContoller;
 use App\Http\Controllers\UserProductController;
 use Illuminate\Support\Facades\Route;
+use Orion\Facades\Orion;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,23 +23,13 @@ Route::post('login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     //Routes for UserProductController
 
-    Route::get('users/{user}/products', [UserProductController::class, 'index']);
+    // Route::get('users/{user}/products', [UserProductController::class, 'index']);
 
-    Route::post('users/{user}/products', [UserProductController::class, 'store']);
+    // Route::post('users/{user}/products', [UserProductController::class, 'store']);
 
-    Route::delete('users/{user}/products/{product}', [UserProductController::class, 'destroy']);
+    // Route::delete('users/{user}/products/{product}', [UserProductController::class, 'destroy']);
 
-    //Routes for ProductController
+    Orion::resource('products', ProductContoller::class);
 
-    Route::get('products', [ProductContoller::class, 'index']);
-
-    Route::get('products/{product:name}', [ProductContoller::class, 'show']);
-
-    Route::post('products', [ProductContoller::class, 'store']);
-
-    Route::put('products/{product}', [ProductContoller::class, 'update']);
-
-    Route::delete('products/{product}', [ProductContoller::class, 'destroy']);
-
-    Route::post('logout', [AuthController::class, 'logout']);
+    Orion::belongsToManyResource('users', 'products', UserProductController::class);
 });

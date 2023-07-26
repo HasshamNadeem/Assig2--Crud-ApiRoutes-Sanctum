@@ -2,40 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\UserProductResource;
-use App\Models\Product;
 use App\Models\User;
-use Illuminate\Http\Request;
+use App\Policies\UserProductPolicy;
+use Orion\Concerns\DisableAuthorization;
+use Orion\Http\Controllers\RelationController;
 
-class UserProductController extends Controller
+class UserProductController extends RelationController
 {
-    public function index(User $user)
-    {
-        $this->authorize('index', $user);
+    protected $model = User::class;
 
-        return    UserProductResource::collection($user->products()->paginate(5));
-    }
+    protected $relation = 'products';
 
-    public function store(Request $request, User $user)
-    {
-        request()->validate([
-            'id' => ['required', 'integer'],
-        ]);
+    use DisableAuthorization;
 
-        $this->authorize('store', $user);
-
-        $user->products()->attach($request->input('id'));
-
-        return response()->json(['message' => 'Product attached successfully'], 200);
-    }
-
-    public function destroy(User $user, Product $product)
-    {
-        // this delete method is used from product policy
-        $this->authorize('delete', $product);
-
-        $user->products()->detach($product->id);
-
-        return response()->json(['message' => 'Product detached successfully'], 200);
-    }
+    // protected $policy = UserProductPolicy::class;
 }
