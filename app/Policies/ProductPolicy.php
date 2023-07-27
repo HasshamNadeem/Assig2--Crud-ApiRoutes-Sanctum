@@ -37,7 +37,7 @@ class ProductPolicy
      */
     public function delete(User $user, Product $product)
     {
-        return $user->products->contains($product->id);
+        return true;
     }
 
     /**
@@ -47,7 +47,7 @@ class ProductPolicy
      */
     public function viewAny(User $user)
     {
-        return 1;
+        return true;
     }
 
     /**
@@ -57,7 +57,7 @@ class ProductPolicy
      */
     public function create(User $user)
     {
-        return 1;
+        return true;
     }
 
     // /**

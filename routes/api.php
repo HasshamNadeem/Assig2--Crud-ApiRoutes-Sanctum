@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductContoller;
+use App\Http\Controllers\UserProductController;
 use Illuminate\Support\Facades\Route;
+use Orion\Facades\Orion;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,19 +21,15 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
+    //Routes for UserProductController
 
-    //Below routes now use route model binding
+    // Route::get('users/{user}/products', [UserProductController::class, 'index']);
 
-    Route::post('user/product', [ProductController::class, 'store']);
+    // Route::post('users/{user}/products', [UserProductController::class, 'store']);
 
-    Route::get('user/products', [ProductController::class, 'index']);
+    // Route::delete('users/{user}/products/{product}', [UserProductController::class, 'destroy']);
 
-    Route::put('user/product/{product}', [ProductController::class, 'update']);
+    Orion::resource('products', ProductContoller::class);
 
-    // Showing products by name, assuming they have unique names (just to test explicit route model binding)
-
-    Route::get('user/product/{product:name}', [ProductController::class, 'show']);
-
-    Route::delete('user/product/{product}', [ProductController::class, 'destroy']);
+    Orion::belongsToManyResource('users', 'products', UserProductController::class);
 });

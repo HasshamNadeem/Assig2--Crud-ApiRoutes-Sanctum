@@ -39,6 +39,6 @@ class Product extends Model
     // Eloquent model realtionship is as below:
     public function users()
     {
-        return $this->belongsToMany(User::class, 'product_user');
+        return $this->belongsToMany(User::class, 'product_user')->withTimestamps();
     }
 }
