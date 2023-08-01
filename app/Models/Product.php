@@ -19,22 +19,22 @@ class Product extends Model
     ];
 
     //Accessor function is define below
-    public function getNameAttribute($value)
-    {
-        return ucfirst($value);
-    }
+    // public function getNameAttribute($value)
+    // {
+    //     return ucfirst($value);
+    // }
 
-    public function getPriceAttribute($value)
-    {
-        return 'PKR '.$value;
-    }
+    // public function getPriceAttribute($value)
+    // {
+    //     return 'PKR '.$value;
+    // }
 
-    //Mutator is  implemented below
+    // //Mutator is  implemented below
 
-    public function setNameAttribute($value)
-    {
-        $this->attributes['name'] = 'new. '.$value;
-    }
+    // public function setNameAttribute($value)
+    // {
+    //     $this->attributes['name'] = 'new. '.$value;
+    // }
 
     // Eloquent model realtionship is as below:
     public function users()

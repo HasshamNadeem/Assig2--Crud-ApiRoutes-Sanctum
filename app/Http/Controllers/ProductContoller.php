@@ -28,7 +28,7 @@ class ProductContoller extends Controller
         $request->validate([
             'name' => ['required', 'max:200', 'unique:products,name'],
             'description' => ['required', 'max: 200'],
-            'price' => ['required', 'max: 200'],
+            'price' => ['required', 'max: 200', 'integer'],
         ]);
 
         $product = new Product;
@@ -46,7 +46,7 @@ class ProductContoller extends Controller
         request()->validate([
             'name' => ['required', 'max: 200'],
             'description' => ['required', 'max: 200'],
-            'price' => ['required', 'max: 200'],
+            'price' => ['required', 'max: 200', 'integer'],
         ]);
 
         $product->name = $request->input('name');
@@ -54,7 +54,7 @@ class ProductContoller extends Controller
         $product->price = $request->input('price');
         $product->save();
 
-        return response()->json(['message' => 'Product Update Successfuly'], 200);
+        return response()->json(['message' => 'Product Update Successfully'], 200);
     }
 
     public function destroy(Product $product)
