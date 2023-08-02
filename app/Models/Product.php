@@ -41,4 +41,9 @@ class Product extends Model
     {
         return $this->belongsToMany(User::class, 'product_user')->withTimestamps();
     }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
 }
