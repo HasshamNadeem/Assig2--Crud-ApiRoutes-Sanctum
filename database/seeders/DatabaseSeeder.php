@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Post;
 use App\Models\Product;
 use  App\Models\User;
 use  Illuminate\Database\Seeder;
@@ -18,6 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(5)->create();
         Product::factory(30)->create();
+        Post::factory(10)->create();
 
         foreach (Product::all() as $product) {
             $users = User::inRandomOrder()->take(rand(1, 3))->pluck('id');

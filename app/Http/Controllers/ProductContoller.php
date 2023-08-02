@@ -2,14 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductContoller extends Controller
 {
     public function __construct()
     {
         $this->authorizeResource(Product::class, 'product');
+    }
+
+    public function index()
+    {
+        return  ProductResource::collection(Product::paginate());
+    }
+
+    public function show(Product $product)
+    {
+        return $product;
     }
 
     public function store(Request $request)
@@ -17,7 +28,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => ['required', 'max:200', 'unique:products,name'],
             'description' => ['required', 'max: 200'],
-            'price' => ['required', 'max: 200'],
+            'price' => ['required', 'max: 200', 'integer'],
         ]);
 
         $product = new Product;
@@ -27,19 +38,7 @@ class ProductController extends Controller
         $product->price = $request->input('price');
         $product->save();
 
-        $product->users()->attach(auth()->user()->id);
-
         return response()->json(['message' => 'Product Added Successfully!'], 201);
-    }
-
-    public function index()
-    {
-        return response()->json(['products' => auth()->user()->products()->paginate(6)], 200);
-    }
-
-    public function show(Product $product)
-    {
-        return $product;
     }
 
     public function update(Request $request, Product $product)
@@ -47,7 +46,7 @@ class ProductController extends Controller
         request()->validate([
             'name' => ['required', 'max: 200'],
             'description' => ['required', 'max: 200'],
-            'price' => ['required', 'max: 200'],
+            'price' => ['required', 'max: 200', 'integer'],
         ]);
 
         $product->name = $request->input('name');
@@ -55,7 +54,7 @@ class ProductController extends Controller
         $product->price = $request->input('price');
         $product->save();
 
-        return response()->json(['message' => 'Product Update Successfuly'], 200);
+        return response()->json(['message' => 'Product Update Successfully'], 200);
     }
 
     public function destroy(Product $product)

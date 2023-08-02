@@ -31,9 +31,14 @@ class User extends Authenticatable
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'product_user');
+        return $this->belongsToMany(Product::class, 'product_user')->withTimestamps();
     }
 
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+    
     /**
      * The attributes that should be hidden for serialization.
      *
